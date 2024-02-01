@@ -1,0 +1,142 @@
+"use client";
+
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import useSWR from "swr";
+import { FaRegEdit } from "react-icons/fa";
+import { TiDelete } from "react-icons/ti";
+import Link from "next/link";
+
+export default function Dashboard() {
+  const session = useSession();
+  const router = useRouter();
+  const fetcher = (...args) => fetch(...args).then((res) => res.json());
+
+  const { data, mutate, error, isLoading } = useSWR(
+    `/api/myproducts?creator=${session?.data?.user.name}`,
+    fetcher
+  );
+
+  function formatTimestamp(timestamp) {
+    const options = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    };
+
+    const date = new Date(timestamp);
+    const formattedDate = date.toLocaleString("en-US", options);
+
+    return formattedDate;
+  }
+
+  const handleDelete = async (id) => {
+    try {
+      // Prompt the user for confirmation
+      const confirmed = window.confirm(
+        "Are you sure you want to delete this product?"
+      );
+
+      // If the user confirms
+      if (confirmed) {
+        const res = await fetch(`/api/products/${id}`, {
+          method: "DELETE",
+        });
+        if (res.ok) {
+          mutate();
+        }
+        if (!res.ok) {
+          throw new Error("Failed to delete product");
+        }
+      } else {
+        // Handle if the user cancels the deletion
+        console.log("Deletion canceled by user");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  if (session.status === "unauthenticated") {
+    router.push("/login");
+  }
+  if (session.status === "authenticated") {
+    if (isLoading) {
+      return (
+        <div className="flex justify-center items-center text-center mx-auto mt-8  border-gray-300 h-[100px] w-[100px] animate-spin rounded-full border-8 border-t-blue-600" />
+      );
+    }
+    return (
+      <div className="container w-full mx-auto p-4">
+        <h1 className="text-center text-4xl font-bold">My Products</h1>
+        {data ? (
+          <div className="grid gap-4 gap-y-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-8">
+            {data.map((item) => (
+              <div
+                key={item._id}
+                className="bg-white rounded-lg overflow-hidden shadow-lg ring-4 ring-red-500 ring-opacity-40 max-w-sm"
+              >
+                <div className="relative">
+                  <img
+                    className="w-full"
+                    src={item.imageurl}
+                    alt="Product Image"
+                  />
+                  <div className="absolute top-0 right-0 bg-red-500 text-white px-2 py-1 m-2 rounded-md text-sm font-medium">
+                    {item.price} $
+                  </div>
+                  <div className="absolute top-0 left-0 bg-green-500 text-white px-2 py-1 m-2 rounded-md text-sm font-medium">
+                    {item.category}
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-medium mb-2">
+                    {item.title.substring(0, 30)} ...
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-4">
+                    {item.description.substring(0, 91)} ...
+                  </p>
+                  <div className="flex items-center justify-between text-center">
+                    <span className="font-bold text-lg">
+                      {formatTimestamp(item.updatedAt).substring(0, 10)}{" "}
+                    </span>
+                    <Link
+                      href={`/products/${item._id}`}
+                      className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+                    >
+                      View
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(item._id)}
+                      className="bg-red-500 hover:bg-red-600 text-white font-bold p-2 rounded-full"
+                    >
+                      <TiDelete size={30} />
+                    </button>
+                    <Link
+                      href={`/edit/${item._id}`}
+                      className="bg-gray-500 hover:bg-gray-600 text-white font-bold p-2 rounded-full text-center"
+                    >
+                      <FaRegEdit className="mx-auto" size={30} />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <>
+            <h1 className="mt-10">
+              You don&apos;t have any product.
+              <Link className="ml-2 underline" href="/sell">
+                Create One
+              </Link>
+            </h1>
+          </>
+        )}
+      </div>
+    );
+  }
+}
