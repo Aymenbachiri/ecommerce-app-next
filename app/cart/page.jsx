@@ -202,7 +202,7 @@ export default function Cart() {
           </div>
         </section>
       ) : (
-        <div className="flex-col md:flex md:flex-row justify-center items-center ">
+        <div className="flex-col md:flex md:flex-row justify-center items-cente">
           <div>
             <Image
               src={emptycart}
@@ -210,7 +210,7 @@ export default function Cart() {
               className="w-80 rounded-lg p-4 mx-auto"
             />
           </div>
-          <div className="max-w-[500px] p-4 py-8 bg-gray-200 flex flex-col gap-4 items-center rounded-md shadow-lg">
+          <div className="max-w-[500px] p-4 py-8  flex flex-col gap-4 items-center rounded-md shadow-lg">
             <h1 className="text-xl font-bold uppercase">
               Your Cart feels lonely.
             </h1>
@@ -220,7 +220,7 @@ export default function Cart() {
             </p>
             <Link
               href={"/products"}
-              className="bg-gray-400 rounded-md cursor-pointer hover:bg-black active:bg-gray-900 px-8 py-2 font-semibold text-lg text-gray-200 hover:text-white duration-300"
+              className=" rounded-md cursor-pointer hover:bg-black active:bg-gray-900 px-8 py-2 font-semibold text-lg hover:text-white duration-300"
             >
               Continue Shopping
             </Link>

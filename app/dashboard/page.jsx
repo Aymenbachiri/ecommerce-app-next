@@ -70,18 +70,18 @@ export default function Dashboard() {
       );
     }
     return (
-      <div className="container w-full mx-auto p-4">
+      <div className="container w-full mx-auto p-4 ">
         <h1 className="text-center text-4xl font-bold">My Products</h1>
         {data ? (
           <div className="grid gap-4 gap-y-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-8">
             {data.map((item) => (
               <div
                 key={item._id}
-                className="bg-white rounded-lg overflow-hidden shadow-lg ring-4 ring-red-500 ring-opacity-40 max-w-sm"
+                className="bg-transparent rounded-lg overflow-hidden shadow-lg ring-4 ring-red-500 ring-opacity-40 max-w-sm"
               >
-                <div className="relative">
+                <div className="relative w-full h-[500px] bg-transparent">
                   <img
-                    className="w-full"
+                    className="w-auto h-auto object-cover bg-transparent"
                     src={item.imageurl}
                     alt="Product Image"
                   />
@@ -92,14 +92,14 @@ export default function Dashboard() {
                     {item.category}
                   </div>
                 </div>
-                <div className="p-4">
-                  <h3 className="text-lg font-medium mb-2">
+                <div className="p-4  h-[210px]">
+                  <h3 className="text-lg font-medium mb-2 h-10 text-gray-800">
                     {item.title.substring(0, 30)} ...
                   </h3>
-                  <p className="text-gray-600 text-sm mb-4">
+                  <p className="text-gray-600 text-sm mb-4 h-10">
                     {item.description.substring(0, 91)} ...
                   </p>
-                  <div className="flex items-center justify-between text-center">
+                  <div className="flex items-center justify-between text-center pt-4 text-gray-800">
                     <span className="font-bold text-lg">
                       {formatTimestamp(item.updatedAt).substring(0, 10)}{" "}
                     </span>

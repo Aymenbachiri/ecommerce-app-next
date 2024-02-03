@@ -10,6 +10,7 @@ import { TiShoppingCart } from "react-icons/ti";
 import { FaUserCircle } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "@/redux-toolkit/shopSlice";
+import ThemeSwitch from "./ThemeSwitch";
 
 export default function Navbar() {
   const session = useSession();
@@ -21,16 +22,20 @@ export default function Navbar() {
     setNav(!nav);
   };
   return (
-    <div className="fixed p-4 top-0 mb-4 w-full h-20 shadow-xl z-20 bg-gray-200 ease-in-out duration-300">
+    <div className="fixed p-4 top-0 mb-4 w-full h-20 shadow-xl z-20 bg-black/70 ease-in-out duration-300">
       <div className="flex justify-between items-center w-full h-full px-2 2xl:px-16">
         <Link href="/">
           <Image src={logo} alt="/" width={50} height={50} />
         </Link>
         <div>
           <ul className="hidden md:flex">
+            <li className="hidden md:flex hover:border-b">
+              <ThemeSwitch />
+            </li>
             <Link href="/">
               <li className="ml-10 text-sm uppercase hover:border-b">Home</li>
             </Link>
+
             <Link href="/products">
               <li className="ml-10 text-sm uppercase hover:border-b">
                 Products
@@ -42,11 +47,11 @@ export default function Navbar() {
               </li>
             </Link>
             <Link className="flex items-center gap-1 relative" href="/cart">
-              <li className="ml-10 text-sm uppercase">Cart</li>
+              <li className="ml-10 text-sm uppercase hover:border-b">Cart</li>
               <div className="absolute w-4 h-4 rounded-full z-10 right-[-3px] top-[-10px] flex items-center justify-center text-[10px] text-white bg-red-600">
                 {cart.length}
               </div>
-              <TiShoppingCart size={20} />
+              <TiShoppingCart className="hover:border-b" size={20} />
             </Link>
             <Link href="/dashboard">
               <li className="ml-10 text-sm uppercase hover:border-b">
@@ -84,11 +89,12 @@ export default function Navbar() {
               </li>
             )}
           </ul>
-          <div className="flex items-center gap-4">
+          <div className="md:hidden flex items-center gap-4">
+            <ThemeSwitch className="md:hidden hover:border-b" />
             {session.status === "authenticated" && (
               <Link
                 href="/dashboard"
-                className="md:hidden flex items-center gap-1"
+                className="md:hidden flex items-center gap-1 hover:border-b"
               >
                 <FaUserCircle size={20} />
                 <h1>{session.data.user.name} </h1>
@@ -98,7 +104,7 @@ export default function Navbar() {
               className="md:hidden flex items-center gap-1 relative"
               href="/cart"
             >
-              <li className="ml-10 text-sm uppercase ">Cart</li>
+              <li className="ml-10 text-sm uppercase hover:border-b">Cart</li>
               <div className="absolute w-4 h-4 rounded-full z-10 right-[-3px] top-[-10px] flex items-center justify-center text-[10px] text-white bg-red-600">
                 {cart.length}
               </div>
@@ -118,7 +124,7 @@ export default function Navbar() {
         <div
           className={
             nav
-              ? "fixed left-0 top-0 w-[75%] sm:w-[60%] md:w-[45%] h-screen bg-gray-200 p-10 ease-in duration-500"
+              ? "fixed left-0 top-0 w-[75%] sm:w-[60%] md:w-[45%] h-screen bg-black/70 text-white p-10 ease-in duration-500"
               : "fixed left-[-100%] top-0 w-[75%] sm:w-[60%] md:w-[45%] h-screen bg-gray-200 p-10 ease-in duration-500"
           }
         >
